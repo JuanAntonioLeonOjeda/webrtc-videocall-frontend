@@ -1,5 +1,6 @@
 <template>
   <div id="mainFrame">
+    Your stream room is: {{ room }}
     <video id="localVideo" ref="localVideo" autoplay muted>LocalVideo</video>
     <video id="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video>
     <div class="bottom-bar d-flex justify-center">

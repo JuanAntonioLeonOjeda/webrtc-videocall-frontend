@@ -31,8 +31,11 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/socket.io.js'
+    '~/plugins/socket.io.js',
+    { src: '~plugins/vue-carousel-3d', ssr: false },
   ],
+
+  components: true,
   /*
   ** Nuxt.js dev-modules
   */
@@ -49,13 +52,44 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    '@nuxtjs/auth'
   ],
+
+  // io: {
+  //   // Options
+  //   sockets: [
+  //     {
+  //       name: 'test',
+  //       url: 'https://peer-js-server-prueba.herokuapp.com/'
+  //     }
+  //   ],
+  //   server: {
+  //     cors: {
+  //       origin: 'https://peek-beats.netlify.app'
+  //     }
+  //   }
+  // },
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+    // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
+    baseURL: 'https://peek-beats.herokuapp.com/api'
+  },
+
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/auth/login', method: 'post', propertyName: 'token' },
+          logout: { url: '/auth/logout', method: 'post' },
+          user: { url: '/users/me', method: 'get' }
+        },
+        tokenType: ''
+      }
+    }
   },
   /*
   ** vuetify module configuration
@@ -89,6 +123,6 @@ export default {
     }
   },
   env: {
-    WS_URL: process.env.WS_URL || 'https://videocall-rtc.herokuapp.com'
+    WS_URL: process.env.WS_URL || 'https://peer-js-server-prueba.herokuapp.com/'
   }
 }
