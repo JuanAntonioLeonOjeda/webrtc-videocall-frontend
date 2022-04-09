@@ -1,8 +1,5 @@
 <template>
-<div>
-  PeekBeats
   <AccessForm />
-</div>
 </template>
 
 <script>
