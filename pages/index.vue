@@ -6,12 +6,12 @@
 </template>
 
 <script>
-// import AccessForm from '@/components/AccesForm'
+import AccessForm from '@/components/AccesForm'
 
 export default {
   name: 'IndexPage',
-  // components: {
-  //   AccessForm
-  // }
+  components: {
+    AccessForm
+  }
 }
 </script>
