@@ -31,7 +31,8 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/socket.io.js'
+    '~/plugins/socket.io.js',
+    { src: '~plugins/vue-peerjs', ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules
