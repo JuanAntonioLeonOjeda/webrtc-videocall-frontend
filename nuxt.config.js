@@ -105,6 +105,6 @@ export default {
     }
   },
   env: {
-    WS_URL: process.env.WS_URL || 'https://videocall-rtc.herokuapp.com'
+    WS_URL: process.env.WS_URL || 'https://peer-js-server-prueba.herokuapp.com'
   }
 }
