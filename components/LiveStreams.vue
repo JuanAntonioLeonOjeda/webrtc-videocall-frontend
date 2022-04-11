@@ -43,7 +43,12 @@
 </template>
 
 <script>
+import LoadingAnimation from '@/components/LoadingAnimation.vue'
+
 export default {
+  components: {
+    LoadingAnimation
+  },
   name: 'LiveStreams',
   data () {
     return {

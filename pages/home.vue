@@ -6,6 +6,7 @@
   > 
     <NavBar />
     <NavigationDrawer />
+    <LiveStreams />
     <v-flex
       xs12
       sm4
@@ -40,12 +41,14 @@
 import Logo from '~/components/Logo.vue'
 import NavigationDrawer from '@/components/NavigationDrawer.vue'
 import NavBar from '@/components/NavBar.vue'
+import LiveStreams from '@/components/LiveStreams.vue'
 
 export default {
   components: {
     Logo,
     NavigationDrawer,
-    NavBar
+    NavBar,
+    LiveStreams
   },
   data () {
     return {
