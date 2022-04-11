@@ -32,7 +32,7 @@ export default {
   */
   plugins: [
     '~/plugins/socket.io.js',
-    { src: '~plugins/vue-peerjs', ssr: false }
+    { src: '~plugins/vue-carousel-3d', ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules
