@@ -4,6 +4,7 @@
     justify-center
     align-center
   >
+    <NavigationDrawer />
     <v-flex
       xs12
       sm4
