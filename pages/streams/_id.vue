@@ -13,6 +13,8 @@
           mdi-microphone
         </v-icon>
       </v-btn>
+      <StopStream v-if="streamerRole" />
+      <AddFavouriteStreamer v-else />
     </div>
   </div>
 </template>
@@ -46,6 +48,9 @@
 </style>
 
 <script>
+import StopStream from '@/components/StopStream.vue'
+import AddFavouriteStreamer from '@/components/AddFavouriteStreamer.vue'
+
 const servers = {
   configuration: {
     offerToReceiveAudio: true,
@@ -60,9 +65,14 @@ const RPC = window.RTCPeerConnection || window.mozRTCPeerConnection || window.we
 const localPC = new RPC(servers)
 
 export default {
+  components: {
+    StopStream,
+    AddFavouriteStreamer
+  },
   data () {
     return {
-      room: this.$route.params.id
+      room: this.$route.params.id,
+      streamerRole: this.$store.state.streamer
     }
   },
   async beforeMount () {
