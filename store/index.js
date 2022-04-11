@@ -81,6 +81,7 @@ export const actions = {
   },
   async getTopFive () {
     const top5 = await this.$axios.get('/users/top')
+    console.log(top5)
     return top5.data
   },
   async addFavouriteStreamer (state, streamerId) {
