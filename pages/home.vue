@@ -1,40 +1,15 @@
 <template>
-  <v-layout
-    column
-    justify-center
-    align-center
-  > 
+  <div>
     <NavBar />
     <NavigationDrawer />
     <LiveStreams />
-    <v-flex
-      xs12
-      sm4
-      md4
+    <v-btn
+      color="primary"
+      @click="startMeeting()"
     >
-      <div class="text-center">
-        <logo />
-      </div>
-      <v-card>
-        <v-card-title class="headline">
-          Start a meeting
-        </v-card-title>
-        <v-card-text>
-          <p>Enter your nickname. To start own meeting enter a nickname and click START button</p>
-          <v-text-field v-model="name" />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            @click="startMeeting()"
-          >
-            START
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-flex>
-  </v-layout>
+      START
+    </v-btn>
+  </div> 
 </template>
 
 <script>
