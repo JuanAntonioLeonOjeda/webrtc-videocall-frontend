@@ -37,10 +37,12 @@
 
 <script>
 import Logo from '~/components/Logo.vue'
+import NavigationDrawer from '@/components/NavigationDrawer.vue'
 
 export default {
   components: {
-    Logo
+    Logo,
+    NavigationDrawer
   },
   data () {
     return {
