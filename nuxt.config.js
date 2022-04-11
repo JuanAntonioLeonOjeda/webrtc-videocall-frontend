@@ -49,7 +49,8 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    '@nuxtjs/auth'
   ],
   /*
   ** Axios module configuration
@@ -57,6 +58,19 @@ export default {
   */
   axios: {
     baseURL: 'https://peek-beats.herokuapp.com/api'
+  },
+
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/auth/login', method: 'post', propertyName: 'token' },
+          logout: { url: '/auth/logout', method: 'post' },
+          user: { url: '/users/me', method: 'get' }
+        },
+        tokenType: ''
+      }
+    }
   },
   /*
   ** vuetify module configuration
