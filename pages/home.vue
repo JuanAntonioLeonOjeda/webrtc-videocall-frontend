@@ -1,14 +1,16 @@
 <template>
   <div>
-    <NavBar />
-    <NavigationDrawer />
-    <LiveStreams />
     <v-btn
       color="primary"
       @click="startMeeting()"
     >
       START
     </v-btn>
+    <NavBar />
+    <NavigationDrawer />
+    <GenreSelect />
+    <LiveStreams />
+    <TopFive />
   </div> 
 </template>
 
@@ -17,13 +19,17 @@ import Logo from '~/components/Logo.vue'
 import NavigationDrawer from '@/components/NavigationDrawer.vue'
 import NavBar from '@/components/NavBar.vue'
 import LiveStreams from '@/components/LiveStreams.vue'
+import GenreSelect from '@/components/GenreSelect.vue'
+import TopFive from '@/components/TopFive.vue'
 
 export default {
   components: {
     Logo,
     NavigationDrawer,
     NavBar,
-    LiveStreams
+    LiveStreams,
+    GenreSelect,
+    TopFive
   },
   data () {
     return {
