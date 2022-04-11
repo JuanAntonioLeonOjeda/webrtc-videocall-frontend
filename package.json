@@ -19,6 +19,7 @@
     "@nuxtjs/pwa": "^3.0.0-0",
     "nuxt": "^2.0.0",
     "socket.io-client": "^2.3.0",
+    "uuid": "^8.3.2",
     "vue-carousel-3d": "^1.0.1"
   },
   "devDependencies": {

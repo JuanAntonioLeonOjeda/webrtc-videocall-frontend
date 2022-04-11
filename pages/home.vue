@@ -1,13 +1,14 @@
 <template>
   <div>
-    <v-btn
+    <!-- <v-btn
       color="primary"
       @click="startMeeting()"
     >
       START
-    </v-btn>
+    </v-btn> -->
     <NavBar />
     <NavigationDrawer />
+    <CreateStreamButton />
     <GenreSelect />
     <LiveStreams />
     <TopFive />
@@ -21,6 +22,7 @@ import NavBar from '@/components/NavBar.vue'
 import LiveStreams from '@/components/LiveStreams.vue'
 import GenreSelect from '@/components/GenreSelect.vue'
 import TopFive from '@/components/TopFive.vue'
+import CreateStreamButton from '@/components/CreateStreamButton.vue'
 
 export default {
   components: {
@@ -29,33 +31,34 @@ export default {
     NavBar,
     LiveStreams,
     GenreSelect,
-    TopFive
+    TopFive,
+    CreateStreamButton
   },
   data () {
     return {
       name: ''
     }
   },
-  methods: {
-    startMeeting () {
-      this.$store.commit('setting/setName', { name: this.name })
-      this.$router.push(`/rooms/${this.createUUID()}`)
-    },
-    createUUID () {
-      // http://www.ietf.org/rfc/rfc4122.txt
-      const s = []
-      const hexDigits = '0123456789abcdef'
-      for (let i = 0; i < 36; i++) {
-        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1)
-      }
-      s[14] = '4' // bits 12-15 of the time_hi_and_version field to 0010
-      s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1) // bits 6-7 of the clock_seq_hi_and_reserved to 01
-      s[8] = s[13] = s[18] = s[23] = '-'
+  // methods: {
+  //   startMeeting () {
+  //     this.$store.commit('setting/setName', { name: this.name })
+  //     this.$router.push(`/rooms/${this.createUUID()}`)
+  //   },
+  //   createUUID () {
+  //     // http://www.ietf.org/rfc/rfc4122.txt
+  //     const s = []
+  //     const hexDigits = '0123456789abcdef'
+  //     for (let i = 0; i < 36; i++) {
+  //       s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1)
+  //     }
+  //     s[14] = '4' // bits 12-15 of the time_hi_and_version field to 0010
+  //     s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1) // bits 6-7 of the clock_seq_hi_and_reserved to 01
+  //     s[8] = s[13] = s[18] = s[23] = '-'
 
-      const uuid = s.join('')
-      return uuid
-    }
-  }
+  //     const uuid = s.join('')
+  //     return uuid
+  //   }
+  // }
 }
 
 </script>
