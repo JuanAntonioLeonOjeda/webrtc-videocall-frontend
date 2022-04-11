@@ -1,28 +1,12 @@
 <template>
-  <v-app>
-    <v-content>
-      <div class="main">
-        <nuxt />
-      </div>
-    </v-content>
-    <v-overlay :value="overlay">
-      <p>
-        <v-progress-circular
-          indeterminate
-          color="primary"
-        />
-        Lost connection to server, trying to reconnect ...
-      </p>
-    </v-overlay>
+  <v-app dark>
+    <v-main>
+      <Nuxt />
+    </v-main>
   </v-app>
 </template>
 
 <style>
-  .main {
-    height: calc(100vh - 64px);
-    width: 100vw;
-    overflow-y: hidden;
-  }
 </style>
 
 <script>
@@ -32,7 +16,7 @@ export default {
   data () {
     return {
       clipped: false,
-      title: 'Video call 1-1'
+      title: 'PeekBeats'
     }
   },
   computed: mapState({
