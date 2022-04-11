@@ -3,7 +3,8 @@
     column
     justify-center
     align-center
-  >
+  > 
+    <NavBar />
     <NavigationDrawer />
     <v-flex
       xs12
@@ -38,11 +39,13 @@
 <script>
 import Logo from '~/components/Logo.vue'
 import NavigationDrawer from '@/components/NavigationDrawer.vue'
+import NavBar from '@/components/NavBar.vue'
 
 export default {
   components: {
     Logo,
-    NavigationDrawer
+    NavigationDrawer,
+    NavBar
   },
   data () {
     return {

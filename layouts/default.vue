@@ -1,22 +1,5 @@
 <template>
   <v-app>
-    <v-app-bar
-      :clipped-left="clipped"
-      fixed
-      app
-      flat
-    >
-      <v-btn
-        icon
-        to="/"
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>mdi-message</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title" />
-      <v-spacer />
-      {{ name }}
-    </v-app-bar>
     <v-content>
       <div class="main">
         <nuxt />
