@@ -115,11 +115,9 @@ export default {
       }
     }
 
-    if (!this.$store.state.streamer) {
-      localPC.ontrack = (event) => {
-        if (event.streams[0]) {
-          this.$refs.remoteVideo.srcObject = event.streams[0]
-        }
+    localPC.ontrack = (event) => {
+      if (event.streams[0]) {
+        this.$refs.remoteVideo.srcObject = event.streams[0]
       }
     }
 
