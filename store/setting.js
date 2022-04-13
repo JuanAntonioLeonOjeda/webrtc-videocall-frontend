@@ -1,7 +1,6 @@
 export const state = () => ({
   name: 'Guest',
-  overlay: false,
-  camera: null
+  overlay: false
 })
 
 export const mutations = {
@@ -10,8 +9,5 @@ export const mutations = {
   },
   setOverlay (state, payload) {
     state.overlay = payload.overlay
-  },
-  setCamera (state, payload) {
-    state.camera = payload.camera
   }
 }

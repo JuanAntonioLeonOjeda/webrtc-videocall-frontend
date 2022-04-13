@@ -88,20 +88,27 @@ export default {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
 
       this.$refs.remoteVideo.srcObject = stream
-      this.$store.commit('setting/setCamera', {
+      this.$store.commit('setCamera', {
         camera: stream
       })
+
       stream.getTracks().forEach((track) => {
         localPC.addTrack(track, stream)
       })
+      const offer = await localPC.createOffer()
+      await localPC.setLocalDescription(offer)
+      await this.$socket.emit('message', JSON.stringify({
+        room: this.room,
+        data: localPC.localDescription
+      }))
+    } else {
+      const offer = await localPC.createOffer()
+      await localPC.setLocalDescription(offer)
+      await this.$socket.emit('message', JSON.stringify({
+        room: this.room,
+        data: localPC.localDescription
+      }))
     }
-
-    const offer = await localPC.createOffer()
-    await localPC.setLocalDescription(offer)
-    await this.$socket.emit('message', JSON.stringify({
-      room: this.room,
-      data: localPC.localDescription
-    }))
 
     localPC.onicecandidate = async (event) => {
       if (event.candidate) {

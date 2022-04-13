@@ -5,7 +5,8 @@ export const state = () => ({
   streamInfo: {},
   stepChange: 1,
   genreId: '',
-  searchGenres: []
+  searchGenres: [],
+  camera: null
 })
 
 export const mutations = {
@@ -29,6 +30,9 @@ export const mutations = {
   },
   searchValues (state, model) {
     state.searchGenres = model
+  },
+  setCamera (state, payload) {
+    state.camera = payload.camera
   }
 }
 
