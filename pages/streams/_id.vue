@@ -1,6 +1,6 @@
 <template>
   <div id="mainFrame">
-    <!-- <video id="localVideo" ref="localVideo" autoplay muted>LocalVideo</video> -->
+    <video id="localVideo" ref="localVideo" autoplay muted>LocalVideo</video>
     <video id="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video>
     <div class="bottom-bar d-flex justify-center">
       <v-btn class="mx-2" fab @click="offCamera()">
@@ -84,32 +84,16 @@ export default {
     localStorage.setItem('lastId', this.room)
   },
   async mounted () {
-    if (this.$store.state.streamer) {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
 
-      this.$refs.remoteVideo.srcObject = stream
-      this.$store.commit('setCamera', {
-        camera: stream
-      })
+    this.$refs.localVideo.srcObject = stream
+    this.$store.commit('setCamera', {
+      camera: stream
+    })
 
-      stream.getTracks().forEach((track) => {
-        console.log('track added: ' + track)
-        localPC.addTrack(track, stream)
-      })
-      console.log('all tracks added')
-
-      localPC.onicecandidate = async (event) => {
-        if (event.candidate) {
-          await this.$socket.emit('message', JSON.stringify({
-            room: this.room,
-            data: event.candidate
-          }))
-        } else {
-          // eslint-disable-next-line
-          console.log('allhasbeensent')
-        }
-      }
-    }
+    stream.getTracks().forEach((track) => {
+      localPC.addTrack(track, stream)
+    })
 
     const offer = await localPC.createOffer()
     await localPC.setLocalDescription(offer)
@@ -118,8 +102,19 @@ export default {
       data: localPC.localDescription
     }))
 
+    localPC.onicecandidate = async (event) => {
+      if (event.candidate) {
+        await this.$socket.emit('message', JSON.stringify({
+          room: this.room,
+          data: event.candidate
+        }))
+      } else {
+        // eslint-disable-next-line
+        console.log('allhasbeensent')
+      }
+    }
+
     localPC.ontrack = (event) => {
-      console.log('ontrack: ' + event)
       if (event.streams[0]) {
         this.$refs.remoteVideo.srcObject = event.streams[0]
       }
