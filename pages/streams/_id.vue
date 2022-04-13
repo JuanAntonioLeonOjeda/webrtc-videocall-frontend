@@ -136,8 +136,6 @@ export default {
       } else if (data.type === 'answer') {
         console.log('type answer')
         await localPC.setRemoteDescription(new RTCSessionDescription(data))
-        const answer = await localPC.createAnswer()
-        await localPC.setLocalDescription(answer)
       } else {
         await localPC.addIceCandidate(new RTCIceCandidate(data))
         console.log('else')
