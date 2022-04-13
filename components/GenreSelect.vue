@@ -5,11 +5,11 @@
         cols="12"
       >
         <div class="text-center">
-          <p class="mb-0">What music genre are you streming?</p>
+          <p class="mb-0">What music genre are you streaming?</p>
         </div>
       </v-col>
     </v-row>
-    <v-row justify="center">
+    <v-row justify="center" class="mt-0">
       <v-col cols="6">
         <v-select
           class="mt-0"
