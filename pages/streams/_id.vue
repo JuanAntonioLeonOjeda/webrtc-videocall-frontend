@@ -96,6 +96,7 @@ export default {
         localPC.addTrack(track, stream)
       })
       const offer = await localPC.createOffer()
+      console.log('offer created')
       await localPC.setLocalDescription(offer)
       await this.$socket.emit('message', JSON.stringify({
         room: this.room,
@@ -114,6 +115,7 @@ export default {
       }
       this.$socket.on('message', async (data) => {
         if (data.type === 'offer') {
+          console.log('offer received')
           await localPC.setRemoteDescription(new RTCSessionDescription(data))
           const answer = await localPC.createAnswer()
           await localPC.setLocalDescription(answer)
@@ -122,6 +124,7 @@ export default {
             data: localPC.localDescription
           }))
         } else if (data.type === 'answer') {
+          console.log('answer received')
           await localPC.setRemoteDescription(new RTCSessionDescription(data))
         } else {
           await localPC.addIceCandidate(new RTCIceCandidate(data))
@@ -129,6 +132,7 @@ export default {
       })
     } else {
       const offer = await localPC.createOffer()
+      console.log('offer created')
       await localPC.setLocalDescription(offer)
       await this.$socket.emit('message', JSON.stringify({
         room: this.room,
@@ -152,6 +156,7 @@ export default {
       }
       this.$socket.on('message', async (data) => {
         if (data.type === 'offer') {
+          console.log('offer received')
           await localPC.setRemoteDescription(new RTCSessionDescription(data))
           const answer = await localPC.createAnswer()
           await localPC.setLocalDescription(answer)
@@ -160,6 +165,7 @@ export default {
             data: localPC.localDescription
           }))
         } else if (data.type === 'answer') {
+          console.log('answer received')
           await localPC.setRemoteDescription(new RTCSessionDescription(data))
         } else {
           await localPC.addIceCandidate(new RTCIceCandidate(data))
