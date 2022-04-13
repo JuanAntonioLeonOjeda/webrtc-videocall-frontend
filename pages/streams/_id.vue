@@ -98,25 +98,25 @@ export default {
       })
       console.log('all tracks added')
 
-      const offer = await localPC.createOffer()
-      await localPC.setLocalDescription(offer)
-      await this.$socket.emit('message', JSON.stringify({
-        room: this.room,
-        data: localPC.localDescription
-      }))
-    }
-
-    localPC.onicecandidate = async (event) => {
-      if (event.candidate) {
-        await this.$socket.emit('message', JSON.stringify({
-          room: this.room,
-          data: event.candidate
-        }))
-      } else {
-        // eslint-disable-next-line
-        console.log('allhasbeensent')
+      localPC.onicecandidate = async (event) => {
+        if (event.candidate) {
+          await this.$socket.emit('message', JSON.stringify({
+            room: this.room,
+            data: event.candidate
+          }))
+        } else {
+          // eslint-disable-next-line
+          console.log('allhasbeensent')
+        }
       }
     }
+
+    const offer = await localPC.createOffer()
+    await localPC.setLocalDescription(offer)
+    await this.$socket.emit('message', JSON.stringify({
+      room: this.room,
+      data: localPC.localDescription
+    }))
 
     localPC.ontrack = (event) => {
       console.log('ontrack: ' + event)
