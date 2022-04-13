@@ -117,12 +117,12 @@ export default {
         if (data.type === 'offer') {
           console.log('offer received')
           await localPC.setRemoteDescription(new RTCSessionDescription(data))
-          // const answer = await localPC.createAnswer()
-          // await localPC.setLocalDescription(answer)
-          // await this.$socket.emit('message', JSON.stringify({
-          //   room: this.room,
-          //   data: localPC.localDescription
-          // }))
+          const answer = await localPC.createAnswer()
+          await localPC.setLocalDescription(answer)
+          await this.$socket.emit('message', JSON.stringify({
+            room: this.room,
+            data: localPC.localDescription
+          }))
         } else if (data.type === 'answer') {
           console.log('answer received')
           await localPC.setRemoteDescription(new RTCSessionDescription(data))
