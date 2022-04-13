@@ -1,6 +1,6 @@
 <template>
   <div id="mainFrame">
-    <video id="localVideo" ref="localVideo" autoplay muted>LocalVideo</video>
+    <!-- <video id="localVideo" ref="localVideo" autoplay muted>LocalVideo</video> -->
     <video id="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video>
     <div class="bottom-bar d-flex justify-center">
       <v-btn class="mx-2" fab @click="offCamera()">
@@ -84,16 +84,17 @@ export default {
     localStorage.setItem('lastId', this.room)
   },
   async mounted () {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    if (this.$store.state.streamer) {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
 
-    this.$refs.localVideo.srcObject = stream
-    this.$store.commit('setting/setCamera', {
-      camera: stream
-    })
-
-    stream.getTracks().forEach((track) => {
-      localPC.addTrack(track, stream)
-    })
+      this.$refs.remoteVideo.srcObject = stream
+      this.$store.commit('setting/setCamera', {
+        camera: stream
+      })
+      stream.getTracks().forEach((track) => {
+        localPC.addTrack(track, stream)
+      })
+    }
 
     const offer = await localPC.createOffer()
     await localPC.setLocalDescription(offer)
@@ -114,9 +115,11 @@ export default {
       }
     }
 
-    localPC.ontrack = (event) => {
-      if (event.streams[0]) {
-        this.$refs.remoteVideo.srcObject = event.streams[0]
+    if (!this.$store.state.streamer) {
+      localPC.ontrack = (event) => {
+        if (event.streams[0]) {
+          this.$refs.remoteVideo.srcObject = event.streams[0]
+        }
       }
     }
 
