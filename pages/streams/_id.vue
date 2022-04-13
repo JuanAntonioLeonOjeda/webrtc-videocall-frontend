@@ -84,95 +84,57 @@ export default {
     localStorage.setItem('lastId', this.room)
   },
   async mounted () {
-    if (this.$store.state.streamer) {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
 
-      this.$refs.remoteVideo.srcObject = stream
-      this.$store.commit('setCamera', {
-        camera: stream
-      })
+    this.$refs.remoteVideo.srcObject = stream
+    this.$store.commit('setCamera', {
+      camera: stream
+    })
 
-      stream.getTracks().forEach((track) => {
-        localPC.addTrack(track, stream)
-      })
-      const offer = await localPC.createOffer()
-      console.log('offer created')
-      await localPC.setLocalDescription(offer)
-      await this.$socket.emit('message', JSON.stringify({
-        room: this.room,
-        data: localPC.localDescription
-      }))
-      localPC.onicecandidate = async (event) => {
-        if (event.candidate) {
-          await this.$socket.emit('message', JSON.stringify({
-            room: this.room,
-            data: event.candidate
-          }))
-        } else {
-          // eslint-disable-next-line
-          console.log('allhasbeensent')
-        }
+    stream.getTracks().forEach((track) => {
+      localPC.addTrack(track, stream)
+    })
+
+    const offer = await localPC.createOffer()
+    await localPC.setLocalDescription(offer)
+    await this.$socket.emit('message', JSON.stringify({
+      room: this.room,
+      data: localPC.localDescription
+    }))
+
+    localPC.onicecandidate = async (event) => {
+      if (event.candidate) {
+        await this.$socket.emit('message', JSON.stringify({
+          room: this.room,
+          data: event.candidate
+        }))
+      } else {
+        // eslint-disable-next-line
+        console.log('allhasbeensent')
       }
-      this.$socket.on('message', async (data) => {
-        if (data.type === 'offer') {
-          console.log('offer received')
-          await localPC.setRemoteDescription(new RTCSessionDescription(data))
-          const answer = await localPC.createAnswer()
-          await localPC.setLocalDescription(answer)
-          await this.$socket.emit('message', JSON.stringify({
-            room: this.room,
-            data: localPC.localDescription
-          }))
-        } else if (data.type === 'answer') {
-          console.log('answer received')
-          await localPC.setRemoteDescription(new RTCSessionDescription(data))
-        } else {
-          await localPC.addIceCandidate(new RTCIceCandidate(data))
-        }
-      })
-    } else {
-      const offer = await localPC.createOffer()
-      console.log('offer created')
-      await localPC.setLocalDescription(offer)
-      await this.$socket.emit('message', JSON.stringify({
-        room: this.room,
-        data: localPC.localDescription
-      }))
-      localPC.onicecandidate = async (event) => {
-        if (event.candidate) {
-          await this.$socket.emit('message', JSON.stringify({
-            room: this.room,
-            data: event.candidate
-          }))
-        } else {
-          // eslint-disable-next-line
-          console.log('allhasbeensent')
-        }
-        localPC.ontrack = (event) => {
-          console.log('track on localPc')
-          if (event.streams[0]) {
-            this.$refs.remoteVideo.srcObject = event.streams[0]
-          }
-        }
-      }
-      this.$socket.on('message', async (data) => {
-        if (data.type === 'offer') {
-          console.log('offer received')
-          await localPC.setRemoteDescription(new RTCSessionDescription(data))
-          const answer = await localPC.createAnswer()
-          await localPC.setLocalDescription(answer)
-          await this.$socket.emit('message', JSON.stringify({
-            room: this.room,
-            data: localPC.localDescription
-          }))
-        } else if (data.type === 'answer') {
-          console.log('answer received')
-          await localPC.setRemoteDescription(new RTCSessionDescription(data))
-        } else {
-          await localPC.addIceCandidate(new RTCIceCandidate(data))
-        }
-      })
     }
+
+    localPC.ontrack = (event) => {
+      if (event.streams[0]) {
+        this.$refs.remoteVideo.srcObject = event.streams[0]
+      }
+    }
+
+    this.$socket.on('message', async (data) => {
+      if (data.type === 'offer') {
+        await localPC.setRemoteDescription(new RTCSessionDescription(data))
+        const answer = await localPC.createAnswer()
+        await localPC.setLocalDescription(answer)
+        await this.$socket.emit('message', JSON.stringify({
+          room: this.room,
+          data: localPC.localDescription
+        }))
+      } else if (data.type === 'answer') {
+        await localPC.setRemoteDescription(new RTCSessionDescription(data))
+      } else {
+        await localPC.addIceCandidate(new RTCIceCandidate(data))
+      }
+    })
   },
   async beforeDestroy () {
     await this.$socket.emit('leave', this.room)
