@@ -114,17 +114,17 @@ export default {
         }
       }
       this.$socket.on('message', async (data) => {
-        if (data.type === 'answer') {
-          console.log('answer received')
-          await localPC.setRemoteDescription(new RTCSessionDescription(data))
-          const answer = await localPC.createAnswer()
-          await localPC.setLocalDescription(answer)
-          await this.$socket.emit('message', JSON.stringify({
-            room: this.room,
-            data: localPC.localDescription
-          }))
-        } else if (data.type === 'offer') {
+        if (data.type === 'offer') {
           console.log('offer received')
+          await localPC.setRemoteDescription(new RTCSessionDescription(data))
+          // const answer = await localPC.createAnswer()
+          // await localPC.setLocalDescription(answer)
+          // await this.$socket.emit('message', JSON.stringify({
+          //   room: this.room,
+          //   data: localPC.localDescription
+          // }))
+        } else if (data.type === 'answer') {
+          console.log('answer received')
           await localPC.setRemoteDescription(new RTCSessionDescription(data))
         } else {
           await localPC.addIceCandidate(new RTCIceCandidate(data))
@@ -149,14 +149,15 @@ export default {
           console.log('allhasbeensent')
         }
         localPC.ontrack = (event) => {
+          console.log('track on localPc')
           if (event.streams[0]) {
             this.$refs.remoteVideo.srcObject = event.streams[0]
           }
         }
       }
       this.$socket.on('message', async (data) => {
-        if (data.type === 'answer') {
-          console.log('answer received')
+        if (data.type === 'offer') {
+          console.log('offer received')
           await localPC.setRemoteDescription(new RTCSessionDescription(data))
           const answer = await localPC.createAnswer()
           await localPC.setLocalDescription(answer)
@@ -164,8 +165,8 @@ export default {
             room: this.room,
             data: localPC.localDescription
           }))
-        } else if (data.type === 'offer') {
-          console.log('offer received')
+        } else if (data.type === 'answer') {
+          console.log('answer received')
           await localPC.setRemoteDescription(new RTCSessionDescription(data))
         } else {
           await localPC.addIceCandidate(new RTCIceCandidate(data))
