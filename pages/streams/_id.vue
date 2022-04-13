@@ -1,6 +1,6 @@
 <template>
   <div id="mainFrame">
-    <!-- <video id="localVideo" ref="localVideo" autoplay muted>LocalVideo</video> -->
+    <video id="localVideo" ref="localVideo" autoplay muted>LocalVideo</video>
     <video id="remoteVideo" ref="remoteVideo" autoplay>RemoteVideo</video>
     <div class="bottom-bar d-flex justify-center">
       <v-btn class="mx-2" fab @click="offCamera()">
@@ -86,7 +86,7 @@ export default {
   async mounted () {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
 
-    this.$refs.remoteVideo.srcObject = stream
+    this.$refs.localVideo.srcObject = stream
     this.$store.commit('setCamera', {
       camera: stream
     })
@@ -97,6 +97,7 @@ export default {
 
     const offer = await localPC.createOffer()
     await localPC.setLocalDescription(offer)
+    console.log('before' + localPC)
     await this.$socket.emit('message', JSON.stringify({
       room: this.room,
       data: localPC.localDescription
@@ -125,6 +126,8 @@ export default {
         await localPC.setRemoteDescription(new RTCSessionDescription(data))
         const answer = await localPC.createAnswer()
         await localPC.setLocalDescription(answer)
+        console.log('after' + localPC)
+        console.log('answer' + localPC.answer)
         await this.$socket.emit('message', JSON.stringify({
           room: this.room,
           data: localPC.localDescription
