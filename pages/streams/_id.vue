@@ -84,18 +84,16 @@ export default {
     localStorage.setItem('lastId', this.room)
   },
   async mounted () {
-    if (this.$store.state.streamer) {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true })
 
-      this.$refs.remoteVideo.srcObject = stream
-      this.$store.commit('setCamera', {
-        camera: stream
-      })
+    this.$refs.remoteVideo.srcObject = stream
+    this.$store.commit('setCamera', {
+      camera: stream
+    })
 
-      stream.getTracks().forEach((track) => {
-        localPC.addTrack(track, stream)
-      })
-    }
+    stream.getTracks().forEach((track) => {
+      localPC.addTrack(track, stream)
+    })
 
     const offer = await localPC.createOffer()
     await localPC.setLocalDescription(offer)
@@ -116,16 +114,17 @@ export default {
       }
     }
 
+    localPC.ontrack = (event) => {
+      if (event.streams[0]) {
+        this.$refs.remoteVideo.srcObject = event.streams[0]
+      }
+    }
+
     this.$socket.on('message', async (data) => {
       if (data.type === 'offer') {
         await localPC.setRemoteDescription(new RTCSessionDescription(data))
         const answer = await localPC.createAnswer()
         await localPC.setLocalDescription(answer)
-        localPC.ontrack = (event) => {
-          if (event.streams[0]) {
-            this.$refs.remoteVideo.srcObject = event.streams[0]
-          }
-        }
         await this.$socket.emit('message', JSON.stringify({
           room: this.room,
           data: localPC.localDescription
@@ -142,7 +141,7 @@ export default {
   },
   methods: {
     offCamera () {
-      this.$store.state.camera.getVideoTracks().forEach((track) => {
+      this.$store.state.setting.camera.getVideoTracks().forEach((track) => {
         track.enabled = !track.enabled
       })
     }
