@@ -101,6 +101,32 @@ export default {
         room: this.room,
         data: localPC.localDescription
       }))
+      localPC.onicecandidate = async (event) => {
+        if (event.candidate) {
+          await this.$socket.emit('message', JSON.stringify({
+            room: this.room,
+            data: event.candidate
+          }))
+        } else {
+          // eslint-disable-next-line
+          console.log('allhasbeensent')
+        }
+      }
+      this.$socket.on('message', async (data) => {
+        if (data.type === 'offer') {
+          await localPC.setRemoteDescription(new RTCSessionDescription(data))
+          const answer = await localPC.createAnswer()
+          await localPC.setLocalDescription(answer)
+          await this.$socket.emit('message', JSON.stringify({
+            room: this.room,
+            data: localPC.localDescription
+          }))
+        } else if (data.type === 'answer') {
+          await localPC.setRemoteDescription(new RTCSessionDescription(data))
+        } else {
+          await localPC.addIceCandidate(new RTCIceCandidate(data))
+        }
+      })
     } else {
       const offer = await localPC.createOffer()
       await localPC.setLocalDescription(offer)
@@ -108,41 +134,38 @@ export default {
         room: this.room,
         data: localPC.localDescription
       }))
-    }
-
-    localPC.onicecandidate = async (event) => {
-      if (event.candidate) {
-        await this.$socket.emit('message', JSON.stringify({
-          room: this.room,
-          data: event.candidate
-        }))
-      } else {
-        // eslint-disable-next-line
-        console.log('allhasbeensent')
+      localPC.onicecandidate = async (event) => {
+        if (event.candidate) {
+          await this.$socket.emit('message', JSON.stringify({
+            room: this.room,
+            data: event.candidate
+          }))
+        } else {
+          // eslint-disable-next-line
+          console.log('allhasbeensent')
+        }
+        localPC.ontrack = (event) => {
+          if (event.streams[0]) {
+            this.$refs.remoteVideo.srcObject = event.streams[0]
+          }
+        }
       }
+      this.$socket.on('message', async (data) => {
+        if (data.type === 'offer') {
+          await localPC.setRemoteDescription(new RTCSessionDescription(data))
+          const answer = await localPC.createAnswer()
+          await localPC.setLocalDescription(answer)
+          await this.$socket.emit('message', JSON.stringify({
+            room: this.room,
+            data: localPC.localDescription
+          }))
+        } else if (data.type === 'answer') {
+          await localPC.setRemoteDescription(new RTCSessionDescription(data))
+        } else {
+          await localPC.addIceCandidate(new RTCIceCandidate(data))
+        }
+      })
     }
-
-    localPC.ontrack = (event) => {
-      if (event.streams[0]) {
-        this.$refs.remoteVideo.srcObject = event.streams[0]
-      }
-    }
-
-    this.$socket.on('message', async (data) => {
-      if (data.type === 'offer') {
-        await localPC.setRemoteDescription(new RTCSessionDescription(data))
-        const answer = await localPC.createAnswer()
-        await localPC.setLocalDescription(answer)
-        await this.$socket.emit('message', JSON.stringify({
-          room: this.room,
-          data: localPC.localDescription
-        }))
-      } else if (data.type === 'answer') {
-        await localPC.setRemoteDescription(new RTCSessionDescription(data))
-      } else {
-        await localPC.addIceCandidate(new RTCIceCandidate(data))
-      }
-    })
   },
   async beforeDestroy () {
     await this.$socket.emit('leave', this.room)
