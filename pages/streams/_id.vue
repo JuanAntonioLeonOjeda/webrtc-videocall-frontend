@@ -93,16 +93,18 @@ export default {
       })
 
       stream.getTracks().forEach((track) => {
+        console.log('track added: ' + track)
         localPC.addTrack(track, stream)
       })
-    }
+      console.log('all tracks added')
 
-    const offer = await localPC.createOffer()
-    await localPC.setLocalDescription(offer)
-    await this.$socket.emit('message', JSON.stringify({
-      room: this.room,
-      data: localPC.localDescription
-    }))
+      const offer = await localPC.createOffer()
+      await localPC.setLocalDescription(offer)
+      await this.$socket.emit('message', JSON.stringify({
+        room: this.room,
+        data: localPC.localDescription
+      }))
+    }
 
     localPC.onicecandidate = async (event) => {
       if (event.candidate) {
