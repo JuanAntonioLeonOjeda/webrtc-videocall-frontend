@@ -97,7 +97,6 @@ export default {
 
     const offer = await localPC.createOffer()
     await localPC.setLocalDescription(offer)
-    console.log('before' + localPC)
     await this.$socket.emit('message', JSON.stringify({
       room: this.room,
       data: localPC.localDescription
@@ -123,19 +122,20 @@ export default {
 
     this.$socket.on('message', async (data) => {
       if (data.type === 'offer') {
+        console.log('type offer')
         await localPC.setRemoteDescription(new RTCSessionDescription(data))
         const answer = await localPC.createAnswer()
         await localPC.setLocalDescription(answer)
-        console.log('after' + localPC)
-        console.log('answer' + localPC.answer)
         await this.$socket.emit('message', JSON.stringify({
           room: this.room,
           data: localPC.localDescription
         }))
       } else if (data.type === 'answer') {
+        console.log('type answer')
         await localPC.setRemoteDescription(new RTCSessionDescription(data))
       } else {
         await localPC.addIceCandidate(new RTCIceCandidate(data))
+        console.log('else')
       }
     })
   },
